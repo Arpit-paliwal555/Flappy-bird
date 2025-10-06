@@ -2,13 +2,53 @@
     <head>
         <link rel="stylesheet" href="styles.css">
     </head>
-        <canvas id="gameCanvas" width="500" height="500" style="border:  10px solid black;"></canvas>
+        <canvas id="gameCanvas" width="800" height="500" style="border:  10px solid black;"></canvas>
         <script>
-            let canvas = document.getElementById("gameCanvas");
-            let ctx = canvas.getContext("2d");
-            ctx.beginPath();
-            ctx.rect(20, 20, 150, 100);
-            ctx.fill();
+            async function main(){
+                console.log("main function called");
+                let canvas = document.getElementById("gameCanvas");
+                let ctx = canvas.getContext("2d");
+                let y = 0;
+                let yVelocity = 0;
+                let yAcc = 9.8;
+
+                document.onkeyup = function(e){
+                    if(e.code == "Space"){
+                        yVelocity = -30;
+                        console.log("space pressed");
+                    }
+                }
+
+                for(let i =0; i<1000;i++){
+                    console.log("inside for loop", i);
+                    yVelocity = yVelocity + 0.33*yAcc; // gravity
+                    y =  y + yVelocity*0.33;
+                    // use the actual canvas size when clearing
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // moving rectangle (red)
+                    ctx.beginPath();
+                    ctx.fillStyle = 'red';
+                    ctx.rect(20, y, 50, 50);
+                    ctx.fill();
+                    
+                    // create a tower (give it a positive width and place it inside the canvas)
+                    ctx.beginPath();
+                    ctx.fillStyle = 'green';
+                    // x moved from 1000 -> 600 (inside 800px canvas), width set from 0 -> 50
+                    ctx.rect(600-i*1.5, 0, 50, 200);
+                    ctx.fill();
+
+                    //second tower
+                    ctx.beginPath();
+                    ctx.fillStyle = 'green';
+                    ctx.rect(600-i*2, 300, 50, 200);
+                    ctx.fill();
+
+                    await new Promise(r => setTimeout(r, 1000*0.0333));
+                }
+            }
+            main();
         </script>
     </body>
 </html>
